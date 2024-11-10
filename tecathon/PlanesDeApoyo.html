@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Gastos Hormiga</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #577C8E;
+            display: flex; /* Usa flexbox en el body */
+            flex-direction: column; /* Coloca los elementos de arriba a abajo */
+            justify-content: center; /* Centra verticalmente */
+            align-items: center; /* Centra horizontalmente */
+        }
+
+        #header {
+            padding: 40px;
+            border: 3px solid #2F4157;
+            margin: 0 auto;
+            background-color: #2F4157;
+            display: flex; /* Usa flexbox para alinear los elementos en línea */
+            align-items: center; /* Alinea verticalmente al centro */
+            gap: 10px; /* Espacio entre el logo y el texto */
+            width: 100%; /* Asegura que el header ocupe todo el ancho disponible */
+        }
+
+        .logo {
+            height: 70px; 
+            width: auto; /* Mantiene la proporción de la imagen */
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 36px; /* Tamaño del texto */
+            color: #577c8e; /* Color del texto */
+            align: center;
+        }
+
+        .container {
+            margin: 20px;
+        }
+
+        .box {
+            background-color: #C7D9E5;
+            margin: 20px 0;
+            padding: 20px;
+            width: 960px;
+            border-radius: 8px;
+        }
+
+        .box h2 {
+            color: #2F4157;
+        }
+
+        .monto-titulo {
+            display: inline;
+        }
+
+        #monto {
+            width: 200px;
+        }
+
+        input[type="number"], input[type="text"], select {
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #2F4157;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #2F4157;
+            color: white;
+            padding: 10px 20px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #1e2a37;
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .option-button {
+            background-color: #2F4157;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .option-button:hover {
+            background-color: #1e2a37;
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <img src="images/logo.png" alt="Logo" class="logo">
+        <h1>Control de Gastos Hormiga</h1>
+    </div>
+    
+    <!-- Mostrar ingreso mensual y cuenta total -->
+    <div class="container">
+        <div class="box">
+            <h2>Ingreso Mensual</h2>
+            <p id="ingresoMensual"></p>
+        </div>
+
+        <div class="box">
+            <h2>Cuenta Total</h2>
+            <p id="cuentaTotal"></p>
+        </div>
+    </div>
+
+    <!-- Formulario de agregar nuevo gasto -->
+    <div class="container">
+        <div class="box">
+            <h2>Agregar Nuevo Gasto</h2>
+            <form id="gastoForm">
+                <label for="nuevoGasto">Nombre del Gasto:</label>
+                <input type="text" id="nuevoGasto" required>
+                <label for="montoGasto">Monto:</label>
+                <input type="number" id="montoGasto" required>
+                
+                <label for="tipoGasto">Tipo de Gasto:</label>
+                <select id="tipoGasto">
+                    <option value="fijo">Fijo</option>
+                    <option value="variable">Variable</option>
+                    <option value="extraordinario">Extraordinario</option>
+                    <option value="inversion">Inversión</option>
+                    <option value="indefinido" selected>Indefinido</option>
+                </select>
+                
+                <button type="submit">Agregar Gasto</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const ingresoMensual = localStorage.getItem("ingresoMensual") || "0";
+            const cuentaTotal = parseFloat(localStorage.getItem("cuentaTotal")) || 0;
+
+            // Mostrar los valores en el HTML
+            document.getElementById("ingresoMensual").textContent = `$${parseFloat(ingresoMensual).toLocaleString()}`;
+            document.getElementById("cuentaTotal").textContent = `$${cuentaTotal.toLocaleString()}`;
+
+            // Agregar un nuevo gasto
+            document.getElementById("gastoForm").addEventListener("submit", function(e) {
+                e.preventDefault();
+                const nuevoGasto = document.getElementById("nuevoGasto").value;
+                const montoGasto = parseFloat(document.getElementById("montoGasto").value);
+                const tipoGasto = document.getElementById("tipoGasto").value;
+
+                if (nuevoGasto && !isNaN(montoGasto)) {
+                    const gastosList = JSON.parse(localStorage.getItem("gastos")) || [];
+                    gastosList.push({ nombre: nuevoGasto, monto: montoGasto, tipo: tipoGasto });
+                    localStorage.setItem("gastos", JSON.stringify(gastosList));
+                }
+            });
+        }
+    </script>
+</body>
+</html>
